@@ -676,6 +676,18 @@ if (typeof Object.create !== "function") {
             base.afterGo();
         },
 
+		// calcHeight
+        // Added public method to calculate slide heights as per autoHeight parameter
+		// Useful for recalculating heights if delayed assets affect layout (custom fonts, images, etc.)
+		calcHeight : function () {
+            var base = this;
+            var $currentItem = $(base.$owlItems[base.currentItem]).outerHeight(true);
+            base.wrapperOuter
+				.addClass('calcHeight') // Add .calcHeight hook (useful for disabling animation)
+				.css("height", $currentItem + "px"); // Set height
+            setTimeout( function() { base.wrapperOuter.removeClass('calcHeight'); }, 0); // Remove .calcHeight hook after previous tasks
+        },
+
         afterGo : function () {
             var base = this;
 
@@ -1112,6 +1124,10 @@ if (typeof Object.create !== "function") {
             base.$elem.on("owl.jumpTo", function (event, item) {
                 base.jumpTo(item);
             });
+            // calcHeight public method
+			base.$elem.on("owl.calcHeight", function () {
+                base.calcHeight();
+            });
         },
 
         stopOnHover : function () {
@@ -1197,7 +1213,7 @@ if (typeof Object.create !== "function") {
                 iterations += 1;
                 if (base.completeImg($lazyImg.get(0)) || isBackgroundImg === true) {
                     showImage();
-                } else if (iterations <= 100) {//if image loads in less than 10 seconds 
+                } else if (iterations <= 100) {//if image loads in less than 10 seconds
                     window.setTimeout(checkLazyImage, 100);
                 } else {
                     showImage();
@@ -1226,7 +1242,7 @@ if (typeof Object.create !== "function") {
                 iterations += 1;
                 if (base.completeImg($currentimg.get(0))) {
                     addHeight();
-                } else if (iterations <= 100) { //if image loads in less than 10 seconds 
+                } else if (iterations <= 100) { //if image loads in less than 10 seconds
                     window.setTimeout(checkImage, 100);
                 } else {
                     base.wrapperOuter.css("height", ""); //Else remove height attribute

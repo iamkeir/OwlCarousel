@@ -1110,7 +1110,7 @@ if (typeof Object.create !== "function") {
                 base.prev();
             });
             base.$elem.on("owl.play", function (event, speed) {
-                base.options.autoPlay = speed;
+                base.options.autoPlay = speed || base.options.autoPlay;
                 base.play();
                 base.hoverStatus = "play";
             });
